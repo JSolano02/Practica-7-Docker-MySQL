@@ -2,13 +2,7 @@
 
 Proyecto **original** de una aplicación web *Hola Mundo* desarrollada con **Node.js + Express** y conectada a **MySQL**. Utiliza un `Dockerfile` para construir la aplicación y `docker-compose.yml` para levantar dos servicios independientes.
 
-## Cumplimiento de la consigna
 
-- **a)** `src/` incluye el código fuente (`server.js`) y la página web (`index.html`).
-- **b)** `docker-compose.yml` define la aplicación, la base de datos, red interna y volumen.
-- **c)** El servicio `app` ejecuta Node.js + Express desde el `Dockerfile`.
-- **d)** El servicio `db` ejecuta MySQL 8.4 con persistencia de datos.
-- **Entrega:** publicar este proyecto en un repositorio público propio de GitHub y compartir la URL.
 
 ## Estructura
 
@@ -89,24 +83,4 @@ Para volver a crear los servicios tras `down`:
 docker compose up -d
 ```
 
-**Importante:** No ejecutes `docker compose down -v` si quieres conservar el contador: `-v` elimina el volumen que guarda los datos. No hay necesidad de usarlo para esta entrega.
 
-## Publicación en GitHub (sin comandos Git)
-
-1. Abre el ícono **Source Control** (Control de código fuente) en VS Code.
-2. Haz clic en **Initialize Repository** si todavía no está inicializado.
-3. Selecciona **Stage All Changes** (símbolo `+`) para incluir los archivos.
-4. Escribe `Practica 7 - Docker Compose con MySQL` y elige **Commit**.
-5. Selecciona **Publish Branch** / **Publish to GitHub**.
-6. Elige **Public repository**; verifica que se publicaron los archivos del proyecto.
-7. Copia la URL y pégala en el foro del docente.
-
-Consulta también `GUIA_PASO_A_PASO.md`. **No subas archivos `.env` ni contraseñas reales** al repositorio.
-
-## Nota de seguridad
-
-Las claves predeterminadas en Compose son **solo para una práctica local de desarrollo**. Para cambiar esas claves, copia `.env.example` como `.env` y modifica los valores; Git ignora `.env`. No usar estas claves ni este despliegue como configuración de producción.
-
-## Funcionamiento interno
-
-Al iniciar, Express prepara la tabla `visitas` en MySQL. Cuando la página consulta `/api/saludo`, el servidor inserta una fila y devuelve el total almacenado. El volumen `mysql_data` mantiene ese contador incluso si detienes los contenedores.
