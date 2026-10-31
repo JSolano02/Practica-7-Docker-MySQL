@@ -1,0 +1,9 @@
+node_modules
+.git
+.gitignore
+.env
+.env.*
+*.zip
+*.log
+README.md
+GUIA_PASO_A_PASO.md

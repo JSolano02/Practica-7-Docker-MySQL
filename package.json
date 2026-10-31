@@ -1,0 +1,18 @@
+{
+  "name": "practica-7-docker-mysql",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicacion Hola Mundo en Node.js con MySQL y Docker Compose para una practica de DevOps.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "check": "node --check src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "4.21.2",
+    "mysql2": "3.12.0"
+  }
+}

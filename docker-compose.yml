@@ -1,0 +1,39 @@
+# Dos servicios independientes que se comunican por la red de Docker Compose.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_USER: practica7
+      DB_PASSWORD: ${MYSQL_PASSWORD:-clave_demo_practica7}
+      DB_NAME: practica7db
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_demo_practica7}
+      MYSQL_DATABASE: practica7db
+      MYSQL_USER: practica7
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-clave_demo_practica7}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", 'mysqladmin ping -h localhost -u root -p"$$MYSQL_ROOT_PASSWORD" --silent']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

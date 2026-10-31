@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 7 | Docker + MySQL</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, Segoe UI, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 22px;
+           background: radial-gradient(circle at top left, #dceafc, transparent 48%), #f3f6fb; color: #18263f; }
+    main { width: min(100%, 650px); background: white; padding: clamp(24px, 5vw, 48px);
+           border: 1px solid #e0e7f1; border-radius: 20px; box-shadow: 0 22px 65px #142a4b18; }
+    .tag { display: inline-block; border-radius: 999px; background: #e5efff; color: #2255a0;
+           padding: 7px 12px; font-size: 12px; font-weight: 700; letter-spacing: .06em; }
+    h1 { font-size: clamp(36px, 7vw, 58px); line-height: 1.08; margin: 20px 0 12px; letter-spacing: -.035em; }
+    p { color: #55647b; line-height: 1.7; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 26px 0; }
+    .card { border: 1px solid #e2e9f2; background: #f8faff; border-radius: 12px; padding: 17px; }
+    .label { display: block; color: #64748b; font-size: 12px; font-weight: 650; margin-bottom: 8px; }
+    .value { font-size: 16px; font-weight: 700; overflow-wrap: anywhere; }
+    .ok { color: #18794e; } .error { color: #b42318; }
+    button { border: 0; padding: 13px 20px; border-radius: 10px; background: #255bc4;
+             color: white; font-size: 15px; font-weight: 650; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: wait; }
+    button:hover:not(:disabled) { background: #1647ab; }
+    .footer { margin-top: 20px; font-size: 13px; color: #778499; }
+    @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="tag">DEVOPS · PRÁCTICA 7</span>
+    <h1>¡Hola Mundo! 👋</h1>
+    <p>Esta aplicación usa <strong>Node.js + Express</strong> y se comunica con
+       <strong>MySQL</strong> mediante <strong>Docker Compose</strong>.
+       Cada vez que actualizas el contador se guarda una visita en la base de datos.</p>
+
+    <div class="grid" aria-live="polite">
+      <div class="card">
+        <span class="label">CONEXIÓN A MYSQL</span>
+        <span id="db" class="value">Verificando...</span>
+      </div>
+      <div class="card">
+        <span class="label">VISITAS GUARDADAS EN LA BD</span>
+        <span id="visitas" class="value">—</span>
+      </div>
+    </div>
+
+    <button id="registrar" type="button">Registrar otra visita</button>
+    <p id="detalle" role="status">Conectando con el servidor...</p>
+    <p class="footer">Servidor web y base de datos en contenedores independientes.</p>
+  </main>
+
+  <script>
+    const boton = document.getElementById('registrar');
+    const db = document.getElementById('db');
+    const visitas = document.getElementById('visitas');
+    const detalle = document.getElementById('detalle');
+
+    async function registrarVisita() {
+      boton.disabled = true;
+      detalle.textContent = 'Consultando MySQL...';
+      try {
+        const respuesta = await fetch('/api/saludo', { cache: 'no-store' });
+        const datos = await respuesta.json();
+        if (!respuesta.ok) throw new Error(datos.mensaje);
+        db.textContent = 'Conectada ✓';
+        db.className = 'value ok';
+        visitas.textContent = datos.totalVisitas;
+        detalle.textContent = 'Visita registrada correctamente en MySQL.';
+      } catch (error) {
+        db.textContent = 'No disponible';
+        db.className = 'value error';
+        detalle.textContent = error.message || 'No se pudo contactar al servidor.';
+      } finally {
+        boton.disabled = false;
+      }
+    }
+
+    boton.addEventListener('click', registrarVisita);
+    registrarVisita();
+  </script>
+</body>
+</html>
